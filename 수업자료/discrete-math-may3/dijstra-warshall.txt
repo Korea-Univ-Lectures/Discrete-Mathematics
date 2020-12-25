@@ -1,0 +1,59 @@
+
+
+1  S = {1}     
+2  for i = 2 to n do
+3     D[i] = C[1,i]     // initialization
+4  for i= 1 to n-1 
+5     choose a vertex w in V - S such that
+6         D[w] is a minimum
+7     add w to S
+8     for each vertex v in V - S 
+9         D[v] = min(D[v], D[w]+C[w,v])
+---------------------------------------------------------------------
+the transitive closure of a directed graph with n vertices is the 
+n by n boolean matrixm, where the element in ith row and jth column 
+is 1 if there exists a directed path of a positive length from the 
+ith vertex to the jth vertex.  otherwise, the element is 0.
+
+example: consider a directed graph that consists of 4 nodes, a, b, c, d and
+         4 edges, (a,b), (b,d), (d,a), (d,c)
+
+the adjaceny matrix and the transitive closure for this graph is 
+as follows:
+
+adjacency matrix    0 1 0 0
+                    0 0 0 1
+                    0 0 0 0
+                    1 0 1 0
+
+transitive closure    1 1 1 1 
+                      1 1 1 1 
+                      0 0 0 0
+                      1 1 1 1 
+
+Warshall's algorithm constructs the transitive closure of a given directed graph
+with n vertices through a series of n by n boolean matrices R^{0}, R^{1}, ..., R^{n}
+
+the element r_{ij}^{k} in the ith row and jth column of matrix R^{k} is equal to 1
+if and only if there exists a path of positive length from ith vertex to jth vertex 
+with intermediate vertex, if any, numbered not higher than k.
+
+for example, r_{42}^{1} is 1 in the above graph because using an intermediate vertex 1
+(in this example vertex 1 is vertex a), there is a path from vertex 4 (i.e., vertex d) 
+to vertex 2 (i.e., vertex b)
+
+in this graph r_{14}^{2} is 1 because there is a path from vertex 1 (i.e., vertex a)
+to vertex 4 (i.e., vertex d) using intemediates vertices 1 and 2 (i.e., vertex a and vertex b)
+
+however r_{34}^{3} is 0 because there is not a path from vertex 3 (i.e., vertex c) 
+to vertex 4 (i.e., vertex d) using intermediate vertices 1, 2, 3 (i.e., vertex a, b, c)
+
+Warshall's algorithm is as follows:
+
+R^{0} <- adjacency matrix of the input directed graph
+for k = 1 to n
+  for i = 1 to n 
+    for j = 1 to n
+       R^{k}[i,j] = R^{k-1}[i,j] or (R^{k-1}[i,k] and R^{k-1}[k,j])
+return R^{n}
+
